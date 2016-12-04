@@ -6,11 +6,8 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <form action="ServletLogin" method="POST">
-            Usuario: <input type="text" name="user"/>
-            <br/>
-            Contraseña: <input type="password" name="pass"/>
-            <input type="submit" value="Submit"/>
+        <form method="POST" action="">
+            
         </form>
     </body>
 </html>

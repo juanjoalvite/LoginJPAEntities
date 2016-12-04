@@ -6,9 +6,18 @@
 package servlets;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.SecretKey;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,26 +41,7 @@ public class LoginServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        
-        EntityManagerFactory emf = (EntityManagerFactory) this.getServletContext().getAttribute("emf");
-        EntityManager em = emf.createEntityManager();
-        
-        LoginService ls = new LoginService(em);
-        ls.existeUsuario("juanjo");
 
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet LoginServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -67,6 +57,20 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+
+        ServletContext context = getServletContext();
+
+        response.setContentType("text/html;charset=UTF-8");
+
+        /*
+        EntityManagerFactory emf = (EntityManagerFactory) context.getAttribute("emf");
+        EntityManager em = emf.createEntityManager();
+
+        LoginService ls = new LoginService(em);
+        ls.existeUsuario("juanjo");
+         */
+        RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/plantillas/login.jsp");
+        rd.forward(request, response);
     }
 
     /**
@@ -81,6 +85,25 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+
+        ServletContext context = getServletContext();
+        EntityManagerFactory emf = (EntityManagerFactory) context.getAttribute("emf");
+        EntityManager em = emf.createEntityManager();
+        LoginService loginService = new LoginService(em);
+        String user = request.getParameter("user").toLowerCase();
+        String password = request.getParameter("pass");
+        String passwordSha1 = loginService.cifrado(password);
+        
+        if (loginService.validaLogin(user, passwordSha1)) {
+            request.getSession().setMaxInactiveInterval(15*60); // 15 min
+            request.getSession().setAttribute("user", user);
+            response.addCookie(new Cookie("userId", 1)); // TODO: sacar id de usuario
+            response.sendRedirect(request.getContextPath() + "/game");
+        } else {
+            request.setAttribute("errorMessage", "El usuario no existe o la contraseña es incorrecta");
+            RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/plantillas/login.jsp");
+            rd.forward(request, response);
+        }
     }
 
     /**

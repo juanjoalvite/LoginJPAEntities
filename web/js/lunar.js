@@ -39,6 +39,10 @@ function reset() {
 	$('#explode').removeClass();
 	$('#explode').css('background', 'transparent');
 	pause = false;
+        
+        var inicio = new Date();
+        localStorage.setItem("inicio", inicio);
+        console.log("inicio", inicio);
 }
 
 function getSpeed() {
@@ -50,6 +54,23 @@ function resize() {
 }
 
 function doEvent(kind, ms) {
+        var dateFin = new Date();
+        var dateInicio = localStorage.getItem("inicio");
+        var datos = {
+                "inicio": dateInicio,
+                "fin": dateFin,
+                "usuario": 2
+        };
+
+        $.ajax({
+            url: "/game",
+            method: "post",
+            data: datos,
+            success: function(data) {
+                console.log("Hecho", datos);
+            }
+        });
+    
 	pause = true;
 	$('#state h1').addClass(kind);
 	$('#state h1').html((kind == 'win') ? 'YOU WIN!' : 'YOU LOSE');
@@ -66,6 +87,10 @@ function doEvent(kind, ms) {
 }
 
 $(document).ready(function() {
+        var inicio = new Date();
+        localStorage.setItem("inicio", inicio);
+        console.log("inicio", inicio);
+        
 	$('body').keydown(function(e) {
 		e.preventDefault();
 		if(e.keyCode == 32)
@@ -92,7 +117,7 @@ $(document).ready(function() {
 	window.setInterval(function() {
 		if(!pause) {
 			$(audio.puh).delay(1000).prop('volume', 0);
-			ship.v += (spacePressed) ? ((ship.fuel > 0) ? ship.thrust : moon.g) : moon.g; // Aceleración
+			ship.v += (spacePressed) ? ((ship.fuel > 0) ? ship.thrust : moon.g) : moon.g; // Aceleraciï¿½n
 			ship.v = (ship.v > ship.maxSpeed) ? ship.maxSpeed : ((ship.v < -ship.maxSpeed) ? -ship.maxSpeed : ship.v); // Velocidad
 			
 			if((ship.v > 0 && ship.y < 500) || (ship.v < 0 && ship.y > 0))
