@@ -19,6 +19,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -97,7 +98,7 @@ public class LoginServlet extends HttpServlet {
         if (loginService.validaLogin(user, passwordSha1)) {
             request.getSession().setMaxInactiveInterval(15*60); // 15 min
             request.getSession().setAttribute("user", user);
-            response.addCookie(new Cookie("userId", 1)); // TODO: sacar id de usuario
+            response.addCookie(new Cookie("userId", "1")); // TODO: sacar id de usuario
             response.sendRedirect(request.getContextPath() + "/game");
         } else {
             request.setAttribute("errorMessage", "El usuario no existe o la contraseña es incorrecta");

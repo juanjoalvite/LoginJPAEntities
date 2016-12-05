@@ -1,3 +1,5 @@
+/* global i */
+
 // Moon
 var moon = {};
 moon.mtop = 50;
@@ -53,13 +55,16 @@ function resize() {
 	moon.base = $('#landing-pad').height() + -($('#landing-pad').height()-150)*0.4 + 30;
 }
 
-function doEvent(kind, ms) {
-        var dateFin = new Date();
-        var dateInicio = localStorage.getItem("inicio");
+function guardarDatos(){
+     var dateFin = new Date();
+        var dateInicio = new Date(localStorage.getItem("inicio"));
+        var score = localStorage.getItem("score");
+        var user = leerCookie("user");
         var datos = {
                 "inicio": dateInicio,
                 "fin": dateFin,
-                "usuario": 2
+                "usuario": user,
+                "score" : score
         };
 
         $.ajax({
@@ -70,20 +75,28 @@ function doEvent(kind, ms) {
                 console.log("Hecho", datos);
             }
         });
-    
+}
+function leerCookie(nombre) {
+         var lista = document.cookie.split(";");
+         for (i in lista) {
+             var busca = lista[i].search(nombre);
+             if (busca > -1) {micookie=lista[i]}
+             }
+         var igual = micookie.indexOf("=");
+         var valor = micookie.substring(igual+1);
+         return valor;
+         }
+
+function doEvent(kind, ms) {
+       
 	pause = true;
 	$('#state h1').addClass(kind);
 	$('#state h1').html((kind == 'win') ? 'YOU WIN!' : 'YOU LOSE');
 	$('#state h2').html((kind == 'win') ? 'Speed: ' + ms + ' m/s': 'Maybe next time...');
 	$('#ms').css('color', (kind == 'win') ? '#0a0' : '#f00');
-	if(kind == 'lose')
-	{
-		$(audio.puh).prop('volume', 1);
-		audio.puh.play();
-		$('#explode').addClass('exploded');
-		$('#explode').css('background', 'url(\'./img/explode.gif?p=' + new Date().getTime() + '\')');
-	}
 	$('#state').delay((kind == 'win') ? 0 : 1000).show(0);
+        localStorage.setItem("score", ms);
+        guardarDatos();
 }
 
 $(document).ready(function() {

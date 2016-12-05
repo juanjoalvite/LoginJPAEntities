@@ -7,6 +7,7 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -67,7 +68,12 @@ public class GameServlet extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
         
+        Date inicio = new Date(request.getParameter("inicio"));
+        Date fin = new Date(request.getParameter("fin"));
+        String usuario = request.getParameter("usuario");
+        Double score = Double.parseDouble(request.getParameter("score"));
         
+        System.out.println(request.getParameter("inicio") + request.getParameter("fin") + request.getParameter("usuario") + request.getParameter("score"));
     }
 
     /**
