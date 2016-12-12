@@ -5,8 +5,11 @@
  */
 package servlets;
 
+import entities.JuanjoaPartidas;
+import entities.JuanjoaUsuarios;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.RequestDispatcher;
@@ -35,11 +38,23 @@ public class GameServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         ServletContext context = getServletContext();
-        
-        
-        
+        EntityManagerFactory emf = (EntityManagerFactory) context.getAttribute("emf");
+        EntityManager em = emf.createEntityManager();
+        GameService gameservice = new GameService(em);
+
+        List<JuanjoaPartidas> maxUsuarios = gameservice.topViciados();
+        List<JuanjoaPartidas> lastConect = gameservice.ultimosConectados();
+
+        request.setAttribute("primero", "1-" + maxUsuarios.get(0).getIdU().getNick() + " (" + maxUsuarios.get(0).getPuntuacion() + ")");
+        request.setAttribute("segundo", "2-" + maxUsuarios.get(1).getIdU().getNick() + " (" + maxUsuarios.get(1).getPuntuacion() + ")");
+        request.setAttribute("tercero", "3-" + maxUsuarios.get(2).getIdU().getNick() + " (" + maxUsuarios.get(2).getPuntuacion() + ")");
+
+        request.setAttribute("last", " " + lastConect.get(0).getIdU().getNick() + " (" + lastConect.get(0).getFechafin() + ")");
+        request.setAttribute("last2", " " + lastConect.get(1).getIdU().getNick() + " (" + lastConect.get(1).getFechafin() + ")");
+        request.setAttribute("last3", " " + lastConect.get(2).getIdU().getNick() + " (" + lastConect.get(2).getFechafin() + ")");
+
         RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/plantillas/game.jsp");
         rd.forward(request, response);
     }
@@ -70,19 +85,20 @@ public class GameServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-        
+
         Date inicio = new Date(request.getParameter("inicio"));
         Date fin = new Date(request.getParameter("fin"));
         int usuario = Integer.parseInt(request.getParameter("usuario"));
         Double score = Double.parseDouble(request.getParameter("score"));
-        
+
         ServletContext context = getServletContext();
         EntityManagerFactory emf = (EntityManagerFactory) context.getAttribute("emf");
         EntityManager em = emf.createEntityManager();
         GameService gameservice = new GameService(em);
-        
+
         gameservice.enviarPartida(inicio, fin, usuario, score);
+
+        processRequest(request, response);
     }
 
     /**

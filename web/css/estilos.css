@@ -16,6 +16,14 @@ body{
     box-shadow: 5px 5px 2px #000;
 }
 
+#lastCon{
+    float: left;
+    margin-top: 35%;
+    margin-left: 5%;
+    font-size: 20px;
+    color: #fff;
+}
+
 #ranking{
     float: left;
     margin-left: 10%;
@@ -36,8 +44,9 @@ body{
     color: brown;
 }
 
-.cuarto,.quinto{
-    color: #b7dc8e;
+.last,.last2,.last3{
+    color: #ffffff;
+    font-size: 12px;
 }
 
 p{

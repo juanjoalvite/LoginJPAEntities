@@ -13,11 +13,31 @@
 	<body>
             <div id="ranking">
                 <p>RANKING</p>
-                <p class="primero">1-</p>
-                <p class="segundo">2-</p>
-                <p class="tercero">3-</p>
-                <p class="cuarto">4-</p>
-                <p class="quinto">5-</p>
+                <%
+                if (request.getAttribute("primero") != null) {
+                    out.println("<p class='primero'>" + request.getAttribute("primero") + "</p>");
+                }
+                if (request.getAttribute("segundo") != null) {
+                    out.println("<p class='segundo'>" + request.getAttribute("segundo") + "</p>");
+                }
+                if (request.getAttribute("tercero") != null) {
+                    out.println("<p class='tercero'>" + request.getAttribute("tercero") + "</p>");
+                }
+            %>
+            </div>
+            <div id="lastCon">
+                <p>Últimas partidas</p>
+                <%
+                if (request.getAttribute("last") != null) {
+                    out.println("<p class='last'>" + request.getAttribute("last") + "</p>");
+                }
+                if (request.getAttribute("last2") != null) {
+                    out.println("<p class='last2'>" + request.getAttribute("last2") + "</p>");
+                }
+                if (request.getAttribute("last3") != null) {
+                    out.println("<p class='last3'>" + request.getAttribute("last3") + "</p>");
+                }
+            %>
             </div>
 		<div id="state">
 			<div class="container">

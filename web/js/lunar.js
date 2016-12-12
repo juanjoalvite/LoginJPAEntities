@@ -45,6 +45,7 @@ function reset() {
         var inicio = new Date();
         localStorage.setItem("inicio", inicio);
         console.log("inicio", inicio);
+        location.reload(true);
 }
 
 function getSpeed() {
@@ -56,7 +57,7 @@ function resize() {
 }
 
 function guardarDatos(){
-     var dateFin = new Date();
+        var dateFin = new Date();
         var dateInicio = new Date(localStorage.getItem("inicio"));
         var score = localStorage.getItem("score");
         var user = leerCookie("user");
@@ -96,7 +97,7 @@ function doEvent(kind, ms) {
 	$('#ms').css('color', (kind == 'win') ? '#0a0' : '#f00');
 	$('#state').delay((kind == 'win') ? 0 : 1000).show(0);
         localStorage.setItem("score", ms);
-        guardarDatos();
+        guardarDatos();      
 }
 
 $(document).ready(function() {

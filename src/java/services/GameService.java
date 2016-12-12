@@ -8,6 +8,7 @@ package services;
 import entities.JuanjoaPartidas;
 import entities.JuanjoaUsuarios;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -50,9 +51,32 @@ public class GameService {
 
         return usuario;
     }
-    
-    public void topViciados(){
-        
-        
+
+    public List<JuanjoaPartidas> topViciados() {
+
+        List<JuanjoaPartidas> usuariosMax = null;
+
+        Query scoreUser = em.createQuery("select p from JuanjoaPartidas p join fetch p.idU order by p.puntuacion DESC").setMaxResults(3);
+
+        try {
+            usuariosMax = (List<JuanjoaPartidas>) scoreUser.getResultList();
+        } catch (NoResultException e) {
+        }
+
+        return usuariosMax;
+    }
+
+    public List<JuanjoaPartidas> ultimosConectados() {
+        List<JuanjoaPartidas> lastConect = null;
+
+        Query scoreUser = em.createQuery("select p from JuanjoaPartidas p join fetch p.idU order by p.fechafin DESC").setMaxResults(3);
+
+        try {
+            lastConect = (List<JuanjoaPartidas>) scoreUser.getResultList();
+        } catch (NoResultException e) {
+        }
+
+        return lastConect;
+
     }
 }
