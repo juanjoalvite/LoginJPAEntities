@@ -6,7 +6,6 @@
 package entities;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -33,8 +32,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "JuanjoaPartidas.findAll", query = "SELECT j FROM JuanjoaPartidas j"),
     @NamedQuery(name = "JuanjoaPartidas.findByIdpartida", query = "SELECT j FROM JuanjoaPartidas j WHERE j.idpartida = :idpartida"),
-    @NamedQuery(name = "JuanjoaPartidas.findByFechainicio", query = "SELECT j FROM JuanjoaPartidas j WHERE j.fechainicio = :fechainicio"),
     @NamedQuery(name = "JuanjoaPartidas.findByFechafin", query = "SELECT j FROM JuanjoaPartidas j WHERE j.fechafin = :fechafin"),
+    @NamedQuery(name = "JuanjoaPartidas.findByFechainicio", query = "SELECT j FROM JuanjoaPartidas j WHERE j.fechainicio = :fechainicio"),
     @NamedQuery(name = "JuanjoaPartidas.findByPuntuacion", query = "SELECT j FROM JuanjoaPartidas j WHERE j.puntuacion = :puntuacion")})
 public class JuanjoaPartidas implements Serializable {
 
@@ -44,14 +43,15 @@ public class JuanjoaPartidas implements Serializable {
     @Basic(optional = false)
     @Column(name = "idpartida")
     private Integer idpartida;
-    @Column(name = "fechainicio")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechainicio;
     @Column(name = "fechafin")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechafin;
+    @Column(name = "fechainicio")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fechainicio;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "puntuacion")
-    private BigInteger puntuacion;
+    private Double puntuacion;
     @JoinColumn(name = "id_u", referencedColumnName = "id")
     @ManyToOne
     private JuanjoaUsuarios idU;
@@ -71,14 +71,6 @@ public class JuanjoaPartidas implements Serializable {
         this.idpartida = idpartida;
     }
 
-    public Date getFechainicio() {
-        return fechainicio;
-    }
-
-    public void setFechainicio(Date fechainicio) {
-        this.fechainicio = fechainicio;
-    }
-
     public Date getFechafin() {
         return fechafin;
     }
@@ -87,11 +79,19 @@ public class JuanjoaPartidas implements Serializable {
         this.fechafin = fechafin;
     }
 
-    public BigInteger getPuntuacion() {
+    public Date getFechainicio() {
+        return fechainicio;
+    }
+
+    public void setFechainicio(Date fechainicio) {
+        this.fechainicio = fechainicio;
+    }
+
+    public Double getPuntuacion() {
         return puntuacion;
     }
 
-    public void setPuntuacion(BigInteger puntuacion) {
+    public void setPuntuacion(Double puntuacion) {
         this.puntuacion = puntuacion;
     }
 

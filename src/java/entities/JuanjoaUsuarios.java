@@ -6,7 +6,7 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,9 +30,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "JuanjoaUsuarios.findAll", query = "SELECT j FROM JuanjoaUsuarios j"),
     @NamedQuery(name = "JuanjoaUsuarios.findById", query = "SELECT j FROM JuanjoaUsuarios j WHERE j.id = :id"),
+    @NamedQuery(name = "JuanjoaUsuarios.findByEmail", query = "SELECT j FROM JuanjoaUsuarios j WHERE j.email = :email"),
     @NamedQuery(name = "JuanjoaUsuarios.findByNick", query = "SELECT j FROM JuanjoaUsuarios j WHERE j.nick = :nick"),
-    @NamedQuery(name = "JuanjoaUsuarios.findByPassword", query = "SELECT j FROM JuanjoaUsuarios j WHERE j.password = :password"),
-    @NamedQuery(name = "JuanjoaUsuarios.findByEmail", query = "SELECT j FROM JuanjoaUsuarios j WHERE j.email = :email")})
+    @NamedQuery(name = "JuanjoaUsuarios.findByPassword", query = "SELECT j FROM JuanjoaUsuarios j WHERE j.password = :password")})
 public class JuanjoaUsuarios implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,17 +41,14 @@ public class JuanjoaUsuarios implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @Column(name = "nick")
-    private String nick;
-    @Basic(optional = false)
-    @Column(name = "password")
-    private String password;
-    @Basic(optional = false)
     @Column(name = "email")
     private String email;
+    @Column(name = "nick")
+    private String nick;
+    @Column(name = "password")
+    private String password;
     @OneToMany(mappedBy = "idU")
-    private List<JuanjoaPartidas> juanjoaPartidasList;
+    private Collection<JuanjoaPartidas> juanjoaPartidasCollection;
 
     public JuanjoaUsuarios() {
     }
@@ -60,19 +57,20 @@ public class JuanjoaUsuarios implements Serializable {
         this.id = id;
     }
 
-    public JuanjoaUsuarios(Integer id, String nick, String password, String email) {
-        this.id = id;
-        this.nick = nick;
-        this.password = password;
-        this.email = email;
-    }
-
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getNick() {
@@ -91,21 +89,13 @@ public class JuanjoaUsuarios implements Serializable {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     @XmlTransient
-    public List<JuanjoaPartidas> getJuanjoaPartidasList() {
-        return juanjoaPartidasList;
+    public Collection<JuanjoaPartidas> getJuanjoaPartidasCollection() {
+        return juanjoaPartidasCollection;
     }
 
-    public void setJuanjoaPartidasList(List<JuanjoaPartidas> juanjoaPartidasList) {
-        this.juanjoaPartidasList = juanjoaPartidasList;
+    public void setJuanjoaPartidasCollection(Collection<JuanjoaPartidas> juanjoaPartidasCollection) {
+        this.juanjoaPartidasCollection = juanjoaPartidasCollection;
     }
 
     @Override

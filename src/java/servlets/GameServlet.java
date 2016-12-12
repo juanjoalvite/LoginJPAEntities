@@ -6,14 +6,16 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Date;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import services.GameService;
 
 /**
  *
@@ -70,10 +72,15 @@ public class GameServlet extends HttpServlet {
         
         Date inicio = new Date(request.getParameter("inicio"));
         Date fin = new Date(request.getParameter("fin"));
-        String usuario = request.getParameter("usuario");
+        int usuario = Integer.parseInt(request.getParameter("usuario"));
         Double score = Double.parseDouble(request.getParameter("score"));
         
-        System.out.println(request.getParameter("inicio") + request.getParameter("fin") + request.getParameter("usuario") + request.getParameter("score"));
+        ServletContext context = getServletContext();
+        EntityManagerFactory emf = (EntityManagerFactory) context.getAttribute("emf");
+        EntityManager em = emf.createEntityManager();
+        GameService gameservice = new GameService(em);
+        
+        gameservice.enviarPartida(inicio, fin, usuario, score);
     }
 
     /**

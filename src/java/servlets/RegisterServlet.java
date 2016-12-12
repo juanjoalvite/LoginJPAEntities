@@ -11,17 +11,16 @@ import javax.persistence.EntityManagerFactory;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import services.LoginService;
+import services.RegisterService;
 
 /**
  *
  * @author juanj
  */
-public class LoginServlet extends HttpServlet {
+public class RegisterServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,6 +33,7 @@ public class LoginServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
 
     }
 
@@ -52,17 +52,7 @@ public class LoginServlet extends HttpServlet {
         processRequest(request, response);
 
         ServletContext context = getServletContext();
-
-        response.setContentType("text/html;charset=UTF-8");
-
-        /*
-        EntityManagerFactory emf = (EntityManagerFactory) context.getAttribute("emf");
-        EntityManager em = emf.createEntityManager();
-
-        LoginService ls = new LoginService(em);
-        ls.existeUsuario("juanjo");
-         */
-        RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/plantillas/login.jsp");
+        RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/plantillas/register.jsp");
         rd.forward(request, response);
     }
 
@@ -82,22 +72,33 @@ public class LoginServlet extends HttpServlet {
         ServletContext context = getServletContext();
         EntityManagerFactory emf = (EntityManagerFactory) context.getAttribute("emf");
         EntityManager em = emf.createEntityManager();
-        LoginService loginService = new LoginService(em);
+        RegisterService loginService = new RegisterService(em);
+
         String user = request.getParameter("user").toLowerCase();
         String password = request.getParameter("pass");
-        String passwordSha1 = loginService.cifrado(password);
+        String password2 = request.getParameter("pass2");
+        String email = request.getParameter("email");
 
-        if (loginService.validaLogin(user, passwordSha1)) {
-            request.getSession().setMaxInactiveInterval(15 * 60); // 15 min
-            request.getSession().setAttribute("user", user);
-            String userID = loginService.buscarID(user);
-            response.addCookie(new Cookie("userId", userID));
-            response.sendRedirect(request.getContextPath() + "/game");
-        } else {
-            request.setAttribute("errorMessage", "El usuario no existe o la contraseña es incorrecta");
-            RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/plantillas/login.jsp");
+        if (!password.equals(password2)) {
+            request.setAttribute("errorMessage", "La contraseña no coincide.");
+            RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/plantillas/register.jsp");
             rd.forward(request, response);
+        } else if ("".equals(user) || "".equals(password) || "".equals(password2) || "".equals(email)) {
+            request.setAttribute("errorMessage", "Hay uno o varios campos vacíos.");
+            RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/plantillas/register.jsp");
+            rd.forward(request, response);
+        } else if (loginService.validaUser(user, email)) {
+            request.setAttribute("errorMessage", "El usuario o el correo ya existe.");
+            RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/plantillas/register.jsp");
+            rd.forward(request, response);
+        } else {
+            request.setAttribute("errorMessage", "Creado Correctamente.");
+            RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/plantillas/register.jsp");
+            rd.forward(request, response);
+            String passwordSHA1 = loginService.cifrado(password);
+            loginService.crearUser(user, email, passwordSHA1);
         }
+
     }
 
     /**

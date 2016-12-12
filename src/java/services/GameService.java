@@ -5,21 +5,54 @@
  */
 package services;
 
+import entities.JuanjoaPartidas;
+import entities.JuanjoaUsuarios;
 import java.util.Date;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
 
 /**
  *
  * @author juanj
  */
 public class GameService {
-     protected EntityManager em;
+
+    protected EntityManager em;
 
     public GameService(EntityManager em) {
         this.em = em;
     }
+
+    public void enviarPartida(Date inicio, Date fin, int usuario, Double score) {
+        em.getTransaction().begin();
+
+        JuanjoaPartidas game = new JuanjoaPartidas();
+        game.setFechainicio(inicio);
+        game.setFechafin(fin);
+        game.setIdU(buscarID(usuario));
+        game.setPuntuacion(score);
+        em.persist(game);
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    public JuanjoaUsuarios buscarID(int id) {
+        JuanjoaUsuarios usuario = null;
+
+        Query existeUsuarioQuery = em.createQuery("SELECT ju FROM JuanjoaUsuarios ju WHERE ju.id = :id")
+                .setParameter("id", id);
+
+        try {
+            usuario = (JuanjoaUsuarios) existeUsuarioQuery.getSingleResult();
+        } catch (NoResultException e) {
+        }
+
+        return usuario;
+    }
     
-    public void enviarPartida(Date inicio, Date fin, Integer id) {
-        // TODO: insert en base de datos
+    public void topViciados(){
+        
+        
     }
 }

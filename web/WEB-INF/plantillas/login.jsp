@@ -16,7 +16,8 @@
             Usuario: <input type="text" name="user"/>
             <br/>
             Contraseña: <input type="password" name="pass"/>
-            <input type="submit" value="Submit"/>
+            <input type="submit" value="Iniciar Sesión"/>
+            <a href = "/register"><input type="button" value="Crear Usuario"/></a> 
         </form>
     </body>
 </html>

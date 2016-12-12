@@ -20,30 +20,15 @@ import servlets.LoginServlet;
  *
  * @author juanj
  */
-public class LoginService {
+public class RegisterService {
 
-    protected EntityManager em;
+    EntityManager em;
 
-    public LoginService(EntityManager em) {
+    public RegisterService(EntityManager em) {
         this.em = em;
     }
 
-    public String buscarID(String nick) {
-        String userID = "";
-
-        Query existeUsuarioQuery = em.createQuery("SELECT ju FROM JuanjoaUsuarios ju WHERE ju.nick = :nick")
-                .setParameter("nick", nick);
-
-        try {
-            JuanjoaUsuarios usuario = (JuanjoaUsuarios) existeUsuarioQuery.getSingleResult();
-            userID = "" + usuario.getId();
-        } catch (NoResultException e) {
-        }
-
-        return userID;
-    }
-
-    public boolean validaLogin(String nick, String password) {
+    public boolean validaUser(String nick, String email) {
         boolean resultado = false;
 
         Query existeUsuarioQuery = em.createQuery("SELECT ju FROM JuanjoaUsuarios ju WHERE ju.nick = :nick")
@@ -56,12 +41,24 @@ public class LoginService {
         } catch (NoResultException e) {
         }
 
-        if (usuario != null && usuario.getPassword().equals(password)) {
+        if (usuario != null && usuario.getPassword().equals(email)) {
             resultado = true;
         }
 
         return resultado;
     }
+
+    public void crearUser(String nick, String email, String password) {
+            em.getTransaction().begin();
+            JuanjoaUsuarios user = new JuanjoaUsuarios();
+            user.setEmail(email);
+            user.setNick(nick);
+            user.setPassword(password);
+            em.persist(user);
+            em.getTransaction().commit();
+            em.close();
+    }
+    
 
     public String cifrado(String password) {
         String passwordSha1 = null;
@@ -79,16 +76,5 @@ public class LoginService {
         }
 
         return passwordSha1;
-    }
-
-    public boolean existeUsuario(String nick) {
-        Query existeUsuarioQuery = em.createQuery("SELECT ju FROM JuanjoaUsuarios ju WHERE ju.nick = :nick")
-                .setParameter("nick", nick);
-
-        JuanjoaUsuarios usuario = (JuanjoaUsuarios) existeUsuarioQuery.getSingleResult();
-
-        System.out.println(usuario.getEmail());
-
-        return true;
     }
 }
