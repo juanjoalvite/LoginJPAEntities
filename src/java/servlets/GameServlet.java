@@ -38,6 +38,8 @@ public class GameServlet extends HttpServlet {
         
         ServletContext context = getServletContext();
         
+        
+        
         RequestDispatcher rd = context.getRequestDispatcher("/WEB-INF/plantillas/game.jsp");
         rd.forward(request, response);
     }

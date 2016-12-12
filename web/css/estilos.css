@@ -1,0 +1,87 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: #6AFF9F;
+}
+
+.user,.pass,.pass2,.email{
+    float: right;
+    margin-top: 10px;
+    margin-right: 10px;
+    border: solid 2px #000;
+    box-shadow: 5px 5px 2px #000;
+}
+
+#ranking{
+    float: left;
+    margin-left: 10%;
+    margin-top: 20%;
+    font-size: 50px;
+    color: #fff;
+}
+
+.primero{
+    color: gold;
+}
+
+.segundo{
+    color: silver;
+}
+
+.tercero{
+    color: brown;
+}
+
+.cuarto,.quinto{
+    color: #b7dc8e;
+}
+
+p{
+    margin-left: 10px;
+}
+
+.error-message{
+    font-size: 15px; 
+    color: #FF0900;
+}
+
+.boton,.submit{
+  margin-bottom: 5px;
+  background: #43f749;
+  background-image: -webkit-linear-gradient(top, #43f749, #007a2b);
+  border-radius: 20px;
+  border-color: #000;
+  font-family: Courier New;
+  color: #ffffff;
+  font-size: 12px;
+  padding: 5px 10px 5px 10px;
+  text-decoration: none;
+}
+
+.boton:hover, .submit:hover {
+  background: #009afa;
+  text-decoration: none;
+}
+
+.boton{
+    margin-left: 10px;   
+}
+
+.submit{
+    float: right;
+    margin-top: 12px;
+    margin-right: 10px;
+}
+
+.form{
+    margin:20% auto;
+    width: 35%;
+    font-size: 30px;
+    background-color: #00B23F;
+    border: solid 5px #000;
+    box-shadow: 10px 10px 5px #000;
+}
